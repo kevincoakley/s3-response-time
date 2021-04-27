@@ -11,11 +11,6 @@ import time
 import uuid
 
 
-bucket_name = str(uuid.uuid4())
-object_name = str(uuid.uuid4())
-download_name = "%s-downloaded" % object_name
-
-
 def remove_file(_path):
     """
     Remove file
@@ -251,6 +246,14 @@ def parse_arguments(_args):
         default="1",
     )
 
+    parser.add_argument(
+        "-b",
+        metavar="bucket_name",
+        dest="bucket_name",
+        help="Use a specific bucket instead of a randomly generated bucket",
+        default=None,
+    )
+
     return parser.parse_args(_args)
 
 
@@ -258,6 +261,13 @@ def main():
     args = parse_arguments(sys.argv[1:])
 
     credentials_json = read_credentials(args.credentials_file)
+
+    if args.bucket_name is None:
+        bucket_name = str(uuid.uuid4())
+    else:
+        bucket_name = args.bucket_name
+    object_name = str(uuid.uuid4())
+    download_name = "%s-downloaded" % object_name
     object_size = int(args.object_size)
 
     start_time = time.time()

@@ -37,7 +37,27 @@ class TestMain(unittest.TestCase):
                 return "fake"
 
         #
-        # Test with no issues
+        # Test with no issues (bucket specified)
+        #
+        with patch.object(
+            sys,
+            "argv",
+            [
+                "s3_response_time.py",
+                "-c",
+                "./tests/test_files/credentials-good.json",
+                "-b",
+                "test-bucket",
+            ],
+        ):
+
+            mock_md5.return_value = "fake"
+            mock_etag.return_value = "fake"
+
+            self.assertEqual(s3_response_time.main(), 0)
+
+        #
+        # Test with no issues (no bucket specified)
         #
         with patch.object(
             sys,
