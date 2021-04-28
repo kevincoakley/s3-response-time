@@ -10,6 +10,34 @@ import sys
 import time
 import uuid
 
+from influxdb_client import InfluxDBClient, Point
+from influxdb_client.client.write_api import SYNCHRONOUS
+
+
+def write_to_influxdb(_url, _token, _org, _bucket, _host, _seconds):
+    """
+    Write the response time to Influxdb
+    :param _url: Influxdb server URL as string
+    :param _token: Influxdb auth token as string
+    :param _org: Influxdb organization as string
+    :param _bucket: Influxdb bucket as string
+    :param _host: Name of the host being as string
+    :param _seconds: Response time in seconds as float
+    :return: None
+    """
+    point = Point("response_time").tag("host", _host).field("seconds", _seconds)
+
+    try:
+        client = InfluxDBClient(url=_url, token=_token, org=_org)
+        write_api = client.write_api(write_options=SYNCHRONOUS)
+        write_api.write(bucket=_bucket, record=point)
+        client.close()
+    except Exception as e:
+        print("CRITICAL - Failed to write to influxdb: %s" % e)
+        sys.exit(2)
+
+    return None
+
 
 def remove_file(_path):
     """
