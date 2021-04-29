@@ -1,0 +1,6 @@
+{
+  "s3_host": "https://server.com",
+  "aws_access_key_id": "abcdefghijklmnopqrstuvwxyz123456",
+  "aws_secret_access_key": "1234567890abcdefghijklmnopqrstuv",
+  "bucket_name": "fake"
+}

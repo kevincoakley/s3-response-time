@@ -10,6 +10,7 @@ import sys
 import time
 import uuid
 
+from distutils import util
 from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
 
@@ -361,6 +362,18 @@ def main():
     # Calculate the total time
     end_time = time.time()
     total_time = end_time - start_time
+
+    # If influxdb_enabled is True in the config file the write the response
+    # time to influxdb
+    if bool(util.strtobool(configuration["influxdb_enabled"])):
+        write_to_influxdb(
+            configuration["influxdb_url"],
+            configuration["influxdb_token"],
+            configuration["influxdb_org"],
+            configuration["influxdb_bucket"],
+            configuration["influxdb_host"],
+            total_time,
+        )
 
     print("OK - total_time: %s" % total_time)
     return 0

@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import influxdb_client
 import sys
 import unittest
 from mock import patch
@@ -18,8 +19,15 @@ class TestMain(unittest.TestCase):
     @patch("s3_response_time.md5")
     @patch("boto3.resource")
     @patch("os.remove")
+    @patch.object(influxdb_client.InfluxDBClient, "write_api")
     def test_main(
-        self, mock_remove, mock_boto3_resource, mock_md5, mock_etag, mock_upload_object
+        self,
+        fake_influxdb,
+        mock_remove,
+        mock_boto3_resource,
+        mock_md5,
+        mock_etag,
+        mock_upload_object,
     ):
 
         # Mock the remove function
@@ -37,18 +45,12 @@ class TestMain(unittest.TestCase):
                 return "fake"
 
         #
-        # Test with no issues (bucket specified)
+        # Test with no issues
         #
         with patch.object(
             sys,
             "argv",
-            [
-                "s3_response_time.py",
-                "-c",
-                "./tests/test_files/credentials-good.json",
-                "-b",
-                "test-bucket",
-            ],
+            ["s3_response_time.py", "-c", "./tests/test_files/configuration-good.json"],
         ):
 
             mock_md5.return_value = "fake"
@@ -57,16 +59,32 @@ class TestMain(unittest.TestCase):
             self.assertEqual(s3_response_time.main(), 0)
 
         #
-        # Test with no issues (no bucket specified)
+        # Test with no issues (bucket_name configured)
         #
         with patch.object(
             sys,
             "argv",
-            ["s3_response_time.py", "-c", "./tests/test_files/credentials-good.json"],
+            [
+                "s3_response_time.py",
+                "-c",
+                "./tests/test_files/configuration-bucket.json",
+            ],
         ):
 
-            mock_md5.return_value = "fake"
-            mock_etag.return_value = "fake"
+            self.assertEqual(s3_response_time.main(), 0)
+
+        #
+        # Test with no issues (influxdb configured)
+        #
+        with patch.object(
+            sys,
+            "argv",
+            [
+                "s3_response_time.py",
+                "-c",
+                "./tests/test_files/configuration-influxdb.json",
+            ],
+        ):
 
             self.assertEqual(s3_response_time.main(), 0)
 
@@ -76,7 +94,7 @@ class TestMain(unittest.TestCase):
         with patch.object(
             sys,
             "argv",
-            ["s3_response_time.py", "-c", "./tests/test_files/credentials-good.json"],
+            ["s3_response_time.py", "-c", "./tests/test_files/configuration-good.json"],
         ):
 
             mock_md5.return_value = "fake"
@@ -92,7 +110,7 @@ class TestMain(unittest.TestCase):
         with patch.object(
             sys,
             "argv",
-            ["s3_response_time.py", "-c", "./tests/test_files/credentials-good.json"],
+            ["s3_response_time.py", "-c", "./tests/test_files/configuration-good.json"],
         ):
 
             mock_md5.side_effect = mock_md5_function
