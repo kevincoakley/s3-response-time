@@ -192,6 +192,9 @@ def create_bucket(_s3, _name, configuration=None):
     except botocore.exceptions.ClientError as e:
         print("CRITICAL - S3 ClientError: %s" % e)
         sys.exit(2)
+    except TypeError as e:
+        print("CRITICAL - S3 bucket TypeError: %s" % e)
+        sys.exit(2)
 
     return bucket
 
