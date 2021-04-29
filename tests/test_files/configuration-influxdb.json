@@ -1,0 +1,11 @@
+{
+  "s3_host": "https://server.com",
+  "aws_access_key_id": "abcdefghijklmnopqrstuvwxyz123456",
+  "aws_secret_access_key": "1234567890abcdefghijklmnopqrstuv",
+  "influxdb_enabled": "True",
+  "influxdb_url": "http://localhost:8086",
+  "influxdb_token": "fake-token",
+  "influxdb_org": "fake-org",
+  "influxdb_bucket": "fake-bucket",
+  "influxdb_host": "fake-host"
+}

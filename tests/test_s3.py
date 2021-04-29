@@ -35,6 +35,11 @@ class S3TestCase(unittest.TestCase):
             s3_response_time.create_bucket(s3, "test-bucket", bucket_config)
         self.assertEqual(se.exception.code, 2)
 
+        # Test TypeError when creating bucket
+        with self.assertRaises(SystemExit) as se:
+            s3_response_time.create_bucket(s3, 1, bucket_config)
+        self.assertEqual(se.exception.code, 2)
+
         # Test deleting a bucket
         s3_response_time.delete_bucket(bucket)
         num_buckets = len([bucket.name for bucket in s3.buckets.all()])

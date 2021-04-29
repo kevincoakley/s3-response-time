@@ -11,22 +11,31 @@ Python 3.6 and 3.8.
 
 Tested S3 operations:
 
-* Create random bucket
+* Create random or specific bucket
 * Upload random object of a specified size (default 1MB)
 * Compare original file MD5 hash to Etag 
 * Download object
 * Compare original file MD5 hash to downloaded file MD5 hash
 * Delete random object
-* Delete random bucket
+* Delete random or specific bucket
 
 Example command:
 
     ./s3_response_time.py -c credentials.json
 
-Example credentials file:
+Example configuration file:
 
     {
-      "s3_host": "https://server.com",
-      "aws_access_key_id": "abcdefghijklmnopqrstuvwxyz123456",
-      "aws_secret_access_key": "1234567890abcdefghijklmnopqrstuv"
+      "s3_host": "https://server.com",          # Required
+      "aws_access_key_id": "abcdefghijklmnop",  # Required
+      "aws_secret_access_key": "1234567890ab",  # Required
+                                                # Everything below is optional; defaults shown
+      "object_size": "1",                       # Size of the object upload in MB 
+      "bucket_name": "",                        # Omit for random bucket name
+      "influxdb_enabled": "False",              # True to enable writing to influxb
+      "influxdb_url": "http://localhost:8086",  # Influxdb server url
+      "influxdb_token": "",                     # Influxdb auth token
+      "influxdb_org": "",                       # Influxdb orgization where the data is saved
+      "influxdb_bucket": "",                    # Influxdb bucket where the data is saved
+      "influxdb_host": ""                       # Influxdb tag that will be assigned to the data
     }

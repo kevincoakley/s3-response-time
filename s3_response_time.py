@@ -10,6 +10,35 @@ import sys
 import time
 import uuid
 
+from distutils import util
+from influxdb_client import InfluxDBClient, Point
+from influxdb_client.client.write_api import SYNCHRONOUS
+
+
+def write_to_influxdb(_url, _token, _org, _bucket, _host, _seconds):
+    """
+    Write the response time to Influxdb
+    :param _url: Influxdb server URL as string
+    :param _token: Influxdb auth token as string
+    :param _org: Influxdb organization as string
+    :param _bucket: Influxdb bucket as string
+    :param _host: Name of the host being as string
+    :param _seconds: Response time in seconds as float
+    :return: None
+    """
+    point = Point("response_time").tag("host", _host).field("seconds", _seconds)
+
+    try:
+        client = InfluxDBClient(url=_url, token=_token, org=_org)
+        write_api = client.write_api(write_options=SYNCHRONOUS)
+        write_api.write(bucket=_bucket, record=point)
+        client.close()
+    except Exception as e:
+        print("CRITICAL - Failed to write to influxdb: %s" % e)
+        sys.exit(2)
+
+    return None
+
 
 def remove_file(_path):
     """
@@ -164,6 +193,9 @@ def create_bucket(_s3, _name, configuration=None):
     except botocore.exceptions.ClientError as e:
         print("CRITICAL - S3 ClientError: %s" % e)
         sys.exit(2)
+    except TypeError as e:
+        print("CRITICAL - S3 bucket TypeError: %s" % e)
+        sys.exit(2)
 
     return bucket
 
@@ -184,15 +216,30 @@ def delete_bucket(_bucket):
     return None
 
 
-def read_credentials(_path):
+def read_configuration(_path):
     """
-    Read the credentials JSON file
-    :param _path: local path to credentials JSON file as string
+    Read the configuration JSON file
+    :param _path: local path to configuration JSON file as string
     :return: Decoded contents of path as hash
     """
+    default_configuration = {
+        "s3_host": "https://localhost:443",
+        "aws_access_key_id": "",
+        "aws_secret_access_key": "",
+        "object_size": "1",
+        "bucket_name": "",
+        "influxdb_enabled": "False",
+        "influxdb_url": "http://localhost:8086",
+        "influxdb_token": "",
+        "influxdb_org": "",
+        "influxdb_bucket": "",
+        "influxdb_host": "",
+    }
+
+    # Read the configuration file
     try:
         with open(_path, "r") as f:
-            credentials = json.load(f)
+            file_configuration = json.load(f)
     except FileNotFoundError as e:
         print("CRITICAL - No Credentials Found: %s" % e)
         sys.exit(2)
@@ -200,7 +247,10 @@ def read_credentials(_path):
         print("CRITICAL - Could Not Decode Credentials JSON: %s" % e)
         sys.exit(2)
 
-    return credentials
+    # Merge the default config with the file config
+    configuration = {**default_configuration, **file_configuration}
+
+    return configuration
 
 
 def s3_auth(_aws_access_key_id, _aws_secret_access_key, _s3_host):
@@ -232,26 +282,10 @@ def parse_arguments(_args):
 
     parser.add_argument(
         "-c",
-        metavar="credentials_file",
-        dest="credentials_file",
-        help="File that contains the credentials.",
+        metavar="configuration_file",
+        dest="configuration_file",
+        help="File that contains the configuration.",
         required=True,
-    )
-
-    parser.add_argument(
-        "-m",
-        metavar="object_size",
-        dest="object_size",
-        help="Object Size (MB)",
-        default="1",
-    )
-
-    parser.add_argument(
-        "-b",
-        metavar="bucket_name",
-        dest="bucket_name",
-        help="Use a specific bucket instead of a randomly generated bucket",
-        default=None,
     )
 
     return parser.parse_args(_args)
@@ -260,21 +294,21 @@ def parse_arguments(_args):
 def main():
     args = parse_arguments(sys.argv[1:])
 
-    credentials_json = read_credentials(args.credentials_file)
+    configuration = read_configuration(args.configuration_file)
 
-    if args.bucket_name is None:
+    if configuration["bucket_name"] == "":
         bucket_name = str(uuid.uuid4())
     else:
-        bucket_name = args.bucket_name
+        bucket_name = configuration["bucket_name"]
     object_name = str(uuid.uuid4())
     download_name = "%s-downloaded" % object_name
-    object_size = int(args.object_size)
+    object_size = int(configuration["object_size"])
 
     start_time = time.time()
 
-    aws_access_key_id = credentials_json["aws_access_key_id"]
-    aws_secret_access_key = credentials_json["aws_secret_access_key"]
-    s3_host = credentials_json["s3_host"]
+    aws_access_key_id = configuration["aws_access_key_id"]
+    aws_secret_access_key = configuration["aws_secret_access_key"]
+    s3_host = configuration["s3_host"]
 
     s3 = s3_auth(aws_access_key_id, aws_secret_access_key, s3_host)
 
@@ -328,6 +362,18 @@ def main():
     # Calculate the total time
     end_time = time.time()
     total_time = end_time - start_time
+
+    # If influxdb_enabled is True in the config file the write the response
+    # time to influxdb
+    if bool(util.strtobool(configuration["influxdb_enabled"])):
+        write_to_influxdb(
+            configuration["influxdb_url"],
+            configuration["influxdb_token"],
+            configuration["influxdb_org"],
+            configuration["influxdb_bucket"],
+            configuration["influxdb_host"],
+            total_time,
+        )
 
     print("OK - total_time: %s" % total_time)
     return 0
