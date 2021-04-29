@@ -215,15 +215,30 @@ def delete_bucket(_bucket):
     return None
 
 
-def read_credentials(_path):
+def read_configuration(_path):
     """
-    Read the credentials JSON file
-    :param _path: local path to credentials JSON file as string
+    Read the configuration JSON file
+    :param _path: local path to configuration JSON file as string
     :return: Decoded contents of path as hash
     """
+    default_configuration = {
+        "s3_host": "https://localhost:443",
+        "aws_access_key_id": "",
+        "aws_secret_access_key": "",
+        "object_size": "1",
+        "bucket_name": "",
+        "influxdb_enabled": "False",
+        "influxdb_url": "http://localhost:8086",
+        "influxdb_token": "",
+        "influxdb_org": "",
+        "influxdb_bucket": "",
+        "influxdb_host": "",
+    }
+
+    # Read the configuration file
     try:
         with open(_path, "r") as f:
-            credentials = json.load(f)
+            file_configuration = json.load(f)
     except FileNotFoundError as e:
         print("CRITICAL - No Credentials Found: %s" % e)
         sys.exit(2)
@@ -231,7 +246,10 @@ def read_credentials(_path):
         print("CRITICAL - Could Not Decode Credentials JSON: %s" % e)
         sys.exit(2)
 
-    return credentials
+    # Merge the default config with the file config
+    configuration = {**default_configuration, **file_configuration}
+
+    return configuration
 
 
 def s3_auth(_aws_access_key_id, _aws_secret_access_key, _s3_host):
@@ -275,21 +293,21 @@ def parse_arguments(_args):
 def main():
     args = parse_arguments(sys.argv[1:])
 
-    credentials_json = read_credentials(args.credentials_file)
+    configuration = read_configuration(args.credentials_file)
 
-    if args.bucket_name is None:
+    if configuration["bucket_name"] == "":
         bucket_name = str(uuid.uuid4())
     else:
-        bucket_name = args.bucket_name
+        bucket_name = configuration["bucket_name"]
     object_name = str(uuid.uuid4())
     download_name = "%s-downloaded" % object_name
-    object_size = int(args.object_size)
+    object_size = int(configuration["object_size"])
 
     start_time = time.time()
 
-    aws_access_key_id = credentials_json["aws_access_key_id"]
-    aws_secret_access_key = credentials_json["aws_secret_access_key"]
-    s3_host = credentials_json["s3_host"]
+    aws_access_key_id = configuration["aws_access_key_id"]
+    aws_secret_access_key = configuration["aws_secret_access_key"]
+    s3_host = configuration["s3_host"]
 
     s3 = s3_auth(aws_access_key_id, aws_secret_access_key, s3_host)
 
