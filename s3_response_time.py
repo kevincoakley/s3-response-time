@@ -269,22 +269,6 @@ def parse_arguments(_args):
         required=True,
     )
 
-    parser.add_argument(
-        "-m",
-        metavar="object_size",
-        dest="object_size",
-        help="Object Size (MB)",
-        default="1",
-    )
-
-    parser.add_argument(
-        "-b",
-        metavar="bucket_name",
-        dest="bucket_name",
-        help="Use a specific bucket instead of a randomly generated bucket",
-        default=None,
-    )
-
     return parser.parse_args(_args)
 
 
