@@ -282,9 +282,9 @@ def parse_arguments(_args):
 
     parser.add_argument(
         "-c",
-        metavar="credentials_file",
-        dest="credentials_file",
-        help="File that contains the credentials.",
+        metavar="configuration_file",
+        dest="configuration_file",
+        help="File that contains the configuration.",
         required=True,
     )
 
@@ -294,7 +294,7 @@ def parse_arguments(_args):
 def main():
     args = parse_arguments(sys.argv[1:])
 
-    configuration = read_configuration(args.credentials_file)
+    configuration = read_configuration(args.configuration_file)
 
     if configuration["bucket_name"] == "":
         bucket_name = str(uuid.uuid4())

@@ -10,5 +10,5 @@ class ArgumentsTestCase(unittest.TestCase):
         pass
 
     def test_parse_arguments(self):
-        args = s3_response_time.parse_arguments(["-c", "credentials_file.json"])
-        self.assertEqual(args.credentials_file, "credentials_file.json")
+        args = s3_response_time.parse_arguments(["-c", "configuration_file.json"])
+        self.assertEqual(args.configuration_file, "configuration_file.json")
