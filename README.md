@@ -11,13 +11,13 @@ Python 3.6 and 3.8.
 
 Tested S3 operations:
 
-* Create random or specific bucket
+* Create random or specific bucket (optional)
 * Upload random object of a specified size (default 1MB)
 * Compare original file MD5 hash to Etag 
 * Download object
 * Compare original file MD5 hash to downloaded file MD5 hash
 * Delete random object
-* Delete random or specific bucket
+* Delete random or specific bucket (optional)
 
 Example command:
 
@@ -31,6 +31,7 @@ Example configuration file:
       "aws_secret_access_key": "1234567890ab",  # Required
                                                 # Everything below is optional; defaults shown
       "object_size": "1",                       # Size of the object upload in MB 
+      "create_bucket": "True",                  # Create bucket; if False bucket must already exist
       "bucket_name": "",                        # Omit for random bucket name
       "influxdb_enabled": "False",              # True to enable writing to influxb
       "influxdb_url": "http://localhost:8086",  # Influxdb server url
