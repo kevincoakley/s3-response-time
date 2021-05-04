@@ -227,6 +227,7 @@ def read_configuration(_path):
         "aws_access_key_id": "",
         "aws_secret_access_key": "",
         "object_size": "1",
+        "create_bucket": "True",
         "bucket_name": "",
         "influxdb_enabled": "False",
         "influxdb_url": "http://localhost:8086",
@@ -312,8 +313,9 @@ def main():
 
     s3 = s3_auth(aws_access_key_id, aws_secret_access_key, s3_host)
 
-    # Create the s3 bucket
-    bucket = create_bucket(s3, bucket_name)
+    # Create the s3 bucket if create_bucket is True
+    if bool(util.strtobool(configuration["create_bucket"])):
+        bucket = create_bucket(s3, bucket_name)
 
     # Create random file
     create_random_file("/tmp/%s" % object_name, object_size)
@@ -356,8 +358,9 @@ def main():
     # Delete Object
     delete_object(uploaded_object)
 
-    # Delete Bucket
-    delete_bucket(bucket)
+    # Delete Bucket if create_bucket is True
+    if bool(util.strtobool(configuration["create_bucket"])):
+        delete_bucket(bucket)
 
     # Calculate the total time
     end_time = time.time()

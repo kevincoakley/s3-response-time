@@ -15,6 +15,7 @@ class ReadConfigurationTestCase(unittest.TestCase):
             "aws_access_key_id": "abcdefghijklmnopqrstuvwxyz123456",
             "aws_secret_access_key": "1234567890abcdefghijklmnopqrstuv",
             "object_size": "1",
+            "create_bucket": "True",
             "bucket_name": "",
             "influxdb_enabled": "False",
             "influxdb_url": "http://localhost:8086",
