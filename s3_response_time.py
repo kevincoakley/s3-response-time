@@ -5,6 +5,7 @@ import boto3
 import botocore
 import hashlib
 import json
+import logging
 import os
 import sys
 import time
@@ -299,6 +300,9 @@ def parse_arguments(_args):
 
 
 def main():
+    # Set the default logger. Use logging.DEBUG for connection details
+    boto3.set_stream_logger("", logging.INFO)
+
     args = parse_arguments(sys.argv[1:])
 
     configuration = read_configuration(args.configuration_file)
