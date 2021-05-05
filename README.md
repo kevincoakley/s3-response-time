@@ -36,9 +36,12 @@ Example configuration file:
       "bucket_name": "",                        # Omit for random bucket name
       "influxdb_enabled": "False",              # True to enable writing to influxb
       "influxdb_url": "http://localhost:8086",  # Influxdb server url
-      "influxdb_token": "",                     # Influxdb auth token
-      "influxdb_org": "",                       # Influxdb orgization where the data is saved
-      "influxdb_bucket": "",                    # Influxdb bucket where the data is saved
+      "influxdb_token": "",                     # Influxdb auth token (Influxdb 2.0)
+                                                #   Use "username:password" for Influxdb 1.8
+      "influxdb_org": "",                       # Influxdb orgization where the data is saved (Influxdb 2.0)
+                                                #   Use "-" for Influxdb 1.8
+      "influxdb_bucket": "",                    # Influxdb bucket where the data is saved (Influxdb 2.0)
+                                                #   Use "database/retention_policy" for Influxdb 1.8
       "influxdb_host": ""                       # Influxdb tag that will be assigned to the data
     }
 
