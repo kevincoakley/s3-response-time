@@ -41,3 +41,20 @@ Example configuration file:
       "influxdb_bucket": "",                    # Influxdb bucket where the data is saved
       "influxdb_host": ""                       # Influxdb tag that will be assigned to the data
     }
+
+CentOS install instructions:
+
+    yum install epel-release
+    yum install python36 python36-virtualenv git (CentOS 7)
+    yum install python3 python3-virtualenv git (CentOS 8)
+
+    git clone https://github.com/kevincoakley/s3-response-time.git
+
+    virtualenv-3 <virtual-environment>
+    source <virtual-environment>/bin/activate
+
+    cd s3-response-time
+
+    pip install -r requirements.txt
+
+    python3 ./s3_response_time.py -c <config>.json
