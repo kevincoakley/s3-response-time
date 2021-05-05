@@ -14,6 +14,7 @@ class ReadConfigurationTestCase(unittest.TestCase):
             "s3_host": "https://server.com",
             "aws_access_key_id": "abcdefghijklmnopqrstuvwxyz123456",
             "aws_secret_access_key": "1234567890abcdefghijklmnopqrstuv",
+            "addressing_style": "auto",
             "object_size": "1",
             "create_bucket": "True",
             "bucket_name": "",

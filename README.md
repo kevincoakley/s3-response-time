@@ -30,6 +30,7 @@ Example configuration file:
       "aws_access_key_id": "abcdefghijklmnop",  # Required
       "aws_secret_access_key": "1234567890ab",  # Required
                                                 # Everything below is optional; defaults shown
+      "addressing_style": "auto",               # S3 addressing style, options: 'auto', 'path', 'virtual'
       "object_size": "1",                       # Size of the object upload in MB 
       "create_bucket": "True",                  # Create bucket; if False bucket must already exist
       "bucket_name": "",                        # Omit for random bucket name
