@@ -226,6 +226,7 @@ def read_configuration(_path):
         "s3_host": "https://localhost:443",
         "aws_access_key_id": "",
         "aws_secret_access_key": "",
+        "addressing_style": "auto",
         "object_size": "1",
         "create_bucket": "True",
         "bucket_name": "",
@@ -254,12 +255,15 @@ def read_configuration(_path):
     return configuration
 
 
-def s3_auth(_aws_access_key_id, _aws_secret_access_key, _s3_host):
+def s3_auth(
+    _aws_access_key_id, _aws_secret_access_key, _s3_host, _addressing_style="auto"
+):
     """
     Authenticate to S3
     :param _aws_access_key_id: AWS access key
     :param _aws_secret_access_key: AWS secret key
     :param _s3_host: S3 host
+    :param _addressing_style: S3 addressing style: 'auto', 'path' or 'virtual'
     :return: S3 boto3 resource object
     """
     s3 = boto3.resource(
@@ -267,7 +271,9 @@ def s3_auth(_aws_access_key_id, _aws_secret_access_key, _s3_host):
         aws_access_key_id=_aws_access_key_id,
         aws_secret_access_key=_aws_secret_access_key,
         endpoint_url=_s3_host,
-        config=botocore.client.Config(signature_version="s3"),
+        config=botocore.client.Config(
+            signature_version="s3", s3={"addressing_style": _addressing_style}
+        ),
     )
 
     return s3
@@ -310,8 +316,9 @@ def main():
     aws_access_key_id = configuration["aws_access_key_id"]
     aws_secret_access_key = configuration["aws_secret_access_key"]
     s3_host = configuration["s3_host"]
+    addressing_style = configuration["addressing_style"]
 
-    s3 = s3_auth(aws_access_key_id, aws_secret_access_key, s3_host)
+    s3 = s3_auth(aws_access_key_id, aws_secret_access_key, s3_host, addressing_style)
 
     # Create the s3 bucket if create_bucket is True
     if bool(util.strtobool(configuration["create_bucket"])):
