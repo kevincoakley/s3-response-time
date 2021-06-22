@@ -30,7 +30,7 @@ def write_to_influxdb(_url, _token, _org, _bucket, _host, _seconds):
     point = Point("response_time").tag("host", _host).field("seconds", _seconds)
 
     try:
-        client = InfluxDBClient(url=_url, token=_token, org=_org)
+        client = InfluxDBClient(url=_url, token=_token, org=_org, verify_ssl=False)
         write_api = client.write_api(write_options=SYNCHRONOUS)
         write_api.write(bucket=_bucket, record=point)
         client.close()
