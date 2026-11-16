@@ -11,7 +11,21 @@ import sys
 import time
 import uuid
 
-from distutils import util
+
+def strtobool(val):
+    """
+    Convert a string representation of truth to True or False
+    :param val: String or boolean value
+    :return: Boolean
+    """
+    if isinstance(val, bool):
+        return val
+    val = val.lower()
+    if val in ("y", "yes", "t", "true", "on", "1"):
+        return True
+    if val in ("n", "no", "f", "false", "off", "0"):
+        return False
+    raise ValueError("invalid truth value %r" % (val,))
 
 
 def remove_file(_path):
@@ -292,7 +306,7 @@ def main():
     s3 = s3_auth(aws_access_key_id, aws_secret_access_key, s3_host, addressing_style)
 
     # Create the s3 bucket if create_bucket is True
-    if bool(util.strtobool(configuration["create_bucket"])):
+    if strtobool(configuration["create_bucket"]):
         bucket = create_bucket(s3, bucket_name)
 
     # Create random file
@@ -337,7 +351,7 @@ def main():
     delete_object(uploaded_object)
 
     # Delete Bucket if create_bucket is True
-    if bool(util.strtobool(configuration["create_bucket"])):
+    if strtobool(configuration["create_bucket"]):
         delete_bucket(bucket)
 
     # Calculate the total time

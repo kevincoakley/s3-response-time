@@ -6,8 +6,8 @@
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 Python script to record the time it takes to preform various operations on an
-S3 object storage. Errors are reported in Nagios format. Script tested with 
-Python 3.6 and 3.8.
+S3 object storage. Errors are reported in Nagios format. Script tested with
+Python 3.9 and 3.12.
 
 Tested S3 operations:
 
