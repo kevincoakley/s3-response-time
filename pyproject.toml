@@ -14,7 +14,7 @@ dev = [
     "black",
     "flake8",
     "mock",
-    "moto",
+    "moto[s3]",
     "pytest",
     "pytest-cov",
 ]

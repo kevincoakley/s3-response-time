@@ -43,4 +43,4 @@ Install instructions (using [uv](https://docs.astral.sh/uv/)):
 
     uv sync --no-dev
 
-    uv run python3 ./s3_response_time.py -c <config>.json
+    uv run --no-dev python3 ./s3_response_time.py -c <config>.json
