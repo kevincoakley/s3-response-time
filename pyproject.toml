@@ -1,0 +1,21 @@
+[project]
+name = "s3-response-time"
+version = "0.1.0"
+description = "Python script to record the time it takes to perform various operations on an S3 object storage."
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "boto3",
+    "botocore",
+]
+
+[dependency-groups]
+dev = [
+    "black",
+    "codecov",
+    "flake8",
+    "mock",
+    "moto",
+    "pytest",
+    "pytest-cov",
+]

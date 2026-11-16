@@ -3,7 +3,7 @@
 import sys
 import unittest
 from mock import patch
-from moto import mock_s3
+from moto import mock_aws
 
 import s3_response_time
 
@@ -12,7 +12,7 @@ class TestMain(unittest.TestCase):
     def setUp(self):
         pass
 
-    @mock_s3
+    @mock_aws
     @patch("s3_response_time.upload_object")
     @patch("s3_response_time.get_object_etag")
     @patch("s3_response_time.md5")

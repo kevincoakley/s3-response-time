@@ -36,19 +36,12 @@ Example configuration file:
       "bucket_name": ""                         # Omit for random bucket name
     }
 
-CentOS install instructions:
-
-    yum install epel-release
-    yum install python36 python36-virtualenv git (CentOS 7)
-    yum install python3 python3-virtualenv git (CentOS 8)
+Install instructions (using [uv](https://docs.astral.sh/uv/)):
 
     git clone https://github.com/kevincoakley/s3-response-time.git
 
-    virtualenv-3 <virtual-environment>
-    source <virtual-environment>/bin/activate
-
     cd s3-response-time
 
-    pip install -r requirements.txt
+    uv sync --no-dev
 
-    python3 ./s3_response_time.py -c <config>.json
+    uv run python3 ./s3_response_time.py -c <config>.json
