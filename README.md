@@ -2,7 +2,6 @@
 
 [![Python package](https://github.com/kevincoakley/s3-response-time/actions/workflows/pythonpackage.yml/badge.svg)](https://github.com/kevincoakley/s3-response-time/actions/workflows/pythonpackage.yml)
 [![Lint](https://github.com/kevincoakley/s3-response-time/actions/workflows/black.yml/badge.svg)](https://github.com/kevincoakley/s3-response-time/actions/workflows/black.yml)
-[![Code Coverage](https://codecov.io/gh/kevincoakley/s3-response-time/branch/master/graph/badge.svg)](https://codecov.io/gh/kevincoakley/s3-response-time/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 Python script to record the time it takes to preform various operations on an
