@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-import influxdb_client
 import sys
 import unittest
 from mock import patch
@@ -19,10 +18,8 @@ class TestMain(unittest.TestCase):
     @patch("s3_response_time.md5")
     @patch("boto3.resource")
     @patch("os.remove")
-    @patch.object(influxdb_client.InfluxDBClient, "write_api")
     def test_main(
         self,
-        fake_influxdb,
         mock_remove,
         mock_boto3_resource,
         mock_md5,
@@ -68,21 +65,6 @@ class TestMain(unittest.TestCase):
                 "s3_response_time.py",
                 "-c",
                 "./tests/test_files/configuration-bucket.json",
-            ],
-        ):
-
-            self.assertEqual(s3_response_time.main(), 0)
-
-        #
-        # Test with no issues (influxdb configured)
-        #
-        with patch.object(
-            sys,
-            "argv",
-            [
-                "s3_response_time.py",
-                "-c",
-                "./tests/test_files/configuration-influxdb.json",
             ],
         ):
 

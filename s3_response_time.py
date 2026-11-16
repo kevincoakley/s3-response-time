@@ -12,33 +12,6 @@ import time
 import uuid
 
 from distutils import util
-from influxdb_client import InfluxDBClient, Point
-from influxdb_client.client.write_api import SYNCHRONOUS
-
-
-def write_to_influxdb(_url, _token, _org, _bucket, _host, _seconds):
-    """
-    Write the response time to Influxdb
-    :param _url: Influxdb server URL as string
-    :param _token: Influxdb auth token as string
-    :param _org: Influxdb organization as string
-    :param _bucket: Influxdb bucket as string
-    :param _host: Name of the host being as string
-    :param _seconds: Response time in seconds as float
-    :return: None
-    """
-    point = Point("response_time").tag("host", _host).field("seconds", _seconds)
-
-    try:
-        client = InfluxDBClient(url=_url, token=_token, org=_org, verify_ssl=False)
-        write_api = client.write_api(write_options=SYNCHRONOUS)
-        write_api.write(bucket=_bucket, record=point)
-        client.close()
-    except Exception as e:
-        print("CRITICAL - Failed to write to influxdb: %s" % e)
-        sys.exit(2)
-
-    return None
 
 
 def remove_file(_path):
@@ -231,12 +204,6 @@ def read_configuration(_path):
         "object_size": "1",
         "create_bucket": "True",
         "bucket_name": "",
-        "influxdb_enabled": "False",
-        "influxdb_url": "http://localhost:8086",
-        "influxdb_token": "",
-        "influxdb_org": "",
-        "influxdb_bucket": "",
-        "influxdb_host": "",
     }
 
     # Read the configuration file
@@ -376,18 +343,6 @@ def main():
     # Calculate the total time
     end_time = time.time()
     total_time = end_time - start_time
-
-    # If influxdb_enabled is True in the config file the write the response
-    # time to influxdb
-    if bool(util.strtobool(configuration["influxdb_enabled"])):
-        write_to_influxdb(
-            configuration["influxdb_url"],
-            configuration["influxdb_token"],
-            configuration["influxdb_org"],
-            configuration["influxdb_bucket"],
-            configuration["influxdb_host"],
-            total_time,
-        )
 
     print("OK - total_time: %s" % total_time)
     return 0
