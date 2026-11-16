@@ -1,7 +1,0 @@
-black
-codecov
-flake8
-mock
-moto
-pytest
-pytest-cov

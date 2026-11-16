@@ -3,7 +3,7 @@
 import boto3
 import unittest
 from mock import patch
-from moto import mock_s3
+from moto import mock_aws
 
 import s3_response_time
 
@@ -16,7 +16,7 @@ class S3TestCase(unittest.TestCase):
     def test_auth(self, fake_boto3_resource):
         s3_response_time.s3_auth("fake", "fake", "fake.site")
 
-    @mock_s3
+    @mock_aws
     def test_bucket(self):
         s3 = boto3.resource("s3", region_name="us-west-2")
         bucket_config = {"LocationConstraint": "us-west-2"}
@@ -50,7 +50,7 @@ class S3TestCase(unittest.TestCase):
             s3_response_time.delete_bucket(bucket)
         self.assertEqual(se.exception.code, 2)
 
-    @mock_s3
+    @mock_aws
     def test_object(self):
         s3 = boto3.resource("s3", region_name="us-east-1")
 

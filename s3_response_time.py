@@ -11,34 +11,21 @@ import sys
 import time
 import uuid
 
-from distutils import util
-from influxdb_client import InfluxDBClient, Point
-from influxdb_client.client.write_api import SYNCHRONOUS
 
-
-def write_to_influxdb(_url, _token, _org, _bucket, _host, _seconds):
+def strtobool(val):
     """
-    Write the response time to Influxdb
-    :param _url: Influxdb server URL as string
-    :param _token: Influxdb auth token as string
-    :param _org: Influxdb organization as string
-    :param _bucket: Influxdb bucket as string
-    :param _host: Name of the host being as string
-    :param _seconds: Response time in seconds as float
-    :return: None
+    Convert a string representation of truth to True or False
+    :param val: String or boolean value
+    :return: Boolean
     """
-    point = Point("response_time").tag("host", _host).field("seconds", _seconds)
-
-    try:
-        client = InfluxDBClient(url=_url, token=_token, org=_org, verify_ssl=False)
-        write_api = client.write_api(write_options=SYNCHRONOUS)
-        write_api.write(bucket=_bucket, record=point)
-        client.close()
-    except Exception as e:
-        print("CRITICAL - Failed to write to influxdb: %s" % e)
-        sys.exit(2)
-
-    return None
+    if isinstance(val, bool):
+        return val
+    val = val.lower()
+    if val in ("y", "yes", "t", "true", "on", "1"):
+        return True
+    if val in ("n", "no", "f", "false", "off", "0"):
+        return False
+    raise ValueError("invalid truth value %r" % (val,))
 
 
 def remove_file(_path):
@@ -231,12 +218,6 @@ def read_configuration(_path):
         "object_size": "1",
         "create_bucket": "True",
         "bucket_name": "",
-        "influxdb_enabled": "False",
-        "influxdb_url": "http://localhost:8086",
-        "influxdb_token": "",
-        "influxdb_org": "",
-        "influxdb_bucket": "",
-        "influxdb_host": "",
     }
 
     # Read the configuration file
@@ -325,7 +306,7 @@ def main():
     s3 = s3_auth(aws_access_key_id, aws_secret_access_key, s3_host, addressing_style)
 
     # Create the s3 bucket if create_bucket is True
-    if bool(util.strtobool(configuration["create_bucket"])):
+    if strtobool(configuration["create_bucket"]):
         bucket = create_bucket(s3, bucket_name)
 
     # Create random file
@@ -370,24 +351,12 @@ def main():
     delete_object(uploaded_object)
 
     # Delete Bucket if create_bucket is True
-    if bool(util.strtobool(configuration["create_bucket"])):
+    if strtobool(configuration["create_bucket"]):
         delete_bucket(bucket)
 
     # Calculate the total time
     end_time = time.time()
     total_time = end_time - start_time
-
-    # If influxdb_enabled is True in the config file the write the response
-    # time to influxdb
-    if bool(util.strtobool(configuration["influxdb_enabled"])):
-        write_to_influxdb(
-            configuration["influxdb_url"],
-            configuration["influxdb_token"],
-            configuration["influxdb_org"],
-            configuration["influxdb_bucket"],
-            configuration["influxdb_host"],
-            total_time,
-        )
 
     print("OK - total_time: %s" % total_time)
     return 0

@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 
-import influxdb_client
 import sys
 import unittest
 from mock import patch
-from moto import mock_s3
+from moto import mock_aws
 
 import s3_response_time
 
@@ -13,16 +12,14 @@ class TestMain(unittest.TestCase):
     def setUp(self):
         pass
 
-    @mock_s3
+    @mock_aws
     @patch("s3_response_time.upload_object")
     @patch("s3_response_time.get_object_etag")
     @patch("s3_response_time.md5")
     @patch("boto3.resource")
     @patch("os.remove")
-    @patch.object(influxdb_client.InfluxDBClient, "write_api")
     def test_main(
         self,
-        fake_influxdb,
         mock_remove,
         mock_boto3_resource,
         mock_md5,
@@ -68,21 +65,6 @@ class TestMain(unittest.TestCase):
                 "s3_response_time.py",
                 "-c",
                 "./tests/test_files/configuration-bucket.json",
-            ],
-        ):
-
-            self.assertEqual(s3_response_time.main(), 0)
-
-        #
-        # Test with no issues (influxdb configured)
-        #
-        with patch.object(
-            sys,
-            "argv",
-            [
-                "s3_response_time.py",
-                "-c",
-                "./tests/test_files/configuration-influxdb.json",
             ],
         ):
 

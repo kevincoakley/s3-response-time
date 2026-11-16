@@ -18,12 +18,6 @@ class ReadConfigurationTestCase(unittest.TestCase):
             "object_size": "1",
             "create_bucket": "True",
             "bucket_name": "",
-            "influxdb_enabled": "False",
-            "influxdb_url": "http://localhost:8086",
-            "influxdb_token": "",
-            "influxdb_org": "",
-            "influxdb_bucket": "",
-            "influxdb_host": "",
         }
 
         read_configuration = s3_response_time.read_configuration(
