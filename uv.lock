@@ -1160,16 +1160,17 @@ wheels = [
 
 [[package]]
 name = "docker"
-version = "5.0.3"
+version = "4.2.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "pywin32", marker = "sys_platform == 'win32'" },
+    { name = "pypiwin32", marker = "sys_platform == 'win32'" },
     { name = "requests", version = "2.15.1", source = { registry = "https://pypi.org/simple" } },
+    { name = "six" },
     { name = "websocket-client" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/ab/d2/45ea0ee13c6cffac96c32ac36db0299932447a736660537ec31ec3a6d877/docker-5.0.3.tar.gz", hash = "sha256:d916a26b62970e7c2f554110ed6af04c7ccff8e9f81ad17d0d40c75637e227fb", size = 209485, upload-time = "2021-10-07T22:54:52.22Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/d8/19/25ddbe30edff87274afb2b364c653c7f7bbdd515337700377f1adf0834c5/docker-4.2.2.tar.gz", hash = "sha256:26eebadce7e298f55b76a88c4f8802476c5eaddbdbe38dbc6cce8781c47c9b54", size = 202283, upload-time = "2020-06-30T16:18:46.764Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/54/f3/7af47ead249fbb798d64a0438bad5c26f17ef6ac5cd324d802038eb10d90/docker-5.0.3-py2.py3-none-any.whl", hash = "sha256:7a79bb439e3df59d0a72621775d600bc8bc8b422d285824cb37103eab91d1ce0", size = 146235, upload-time = "2021-10-07T22:54:50.194Z" },
+    { url = "https://files.pythonhosted.org/packages/3c/15/7a2f095a3b8b0fff9a0a5f56bd941e05fa958d4ca31105541001a5f7d3eb/docker-4.2.2-py2.py3-none-any.whl", hash = "sha256:03a46400c4080cb6f7aa997f881ddd84fef855499ece219d75fbdb53289c17ab", size = 144121, upload-time = "2020-06-30T16:18:44.901Z" },
 ]
 
 [[package]]
@@ -1871,6 +1872,18 @@ wheels = [
 ]
 
 [[package]]
+name = "pypiwin32"
+version = "223"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "pywin32" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/13/e8/4f38eb30c4dae36634a53c5b2cd73b517ea3607e10d00f61f2494449cec0/pypiwin32-223.tar.gz", hash = "sha256:71be40c1fbd28594214ecaecb58e7aa8b708eabfa0125c8a109ebd51edbd776a", size = 622, upload-time = "2018-02-26T00:43:23.994Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d0/1b/2f292bbd742e369a100c91faa0483172cd91a1a422a6692055ac920946c5/pypiwin32-223-py3-none-any.whl", hash = "sha256:67adf399debc1d5d14dffc1ab5acacb800da569754fafdc576b2a039485aa775", size = 1674, upload-time = "2018-02-26T00:43:23.108Z" },
+]
+
+[[package]]
 name = "pytest"
 version = "8.4.2"
 source = { registry = "https://pypi.org/simple" }
@@ -2014,11 +2027,11 @@ wheels = [
 
 [[package]]
 name = "pywin32"
-version = "227"
+version = "301"
 source = { registry = "https://pypi.org/simple" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/9d/c9/953c3844d046577f5617f927d5c15760ef320e01699e4fd6d214917199c1/pywin32-227-cp39-cp39-win32.whl", hash = "sha256:c054c52ba46e7eb6b7d7dfae4dbd987a1bb48ee86debe3f245a2884ece46e295", size = 8355746, upload-time = "2019-11-13T23:35:31.998Z" },
-    { url = "https://files.pythonhosted.org/packages/56/74/3382d6a06050516f152ac703705794da033b92fc6385fda445631d645612/pywin32-227-cp39-cp39-win_amd64.whl", hash = "sha256:f27cec5e7f588c3d1051651830ecc00294f90728d19c3bf6916e6dba93ea357c", size = 9064939, upload-time = "2019-11-13T23:35:42.42Z" },
+    { url = "https://files.pythonhosted.org/packages/d2/62/2c1db93c2ac7ee7f8fd91d4139905b17e91d62015848b5adaa10a6307372/pywin32-301-cp39-cp39-win32.whl", hash = "sha256:595d397df65f1b2e0beaca63a883ae6d8b6df1cdea85c16ae85f6d2e648133fe", size = 8475023, upload-time = "2021-05-31T00:47:27.651Z" },
+    { url = "https://files.pythonhosted.org/packages/5f/97/7a9d7028977390a9692d7176c85e51750c8e431503fc02ab3e54a8e0dcad/pywin32-301-cp39-cp39-win_amd64.whl", hash = "sha256:87604a4087434cd814ad8973bd47d6524bd1fa9e971ce428e76b62a5e0860fdf", size = 9259914, upload-time = "2021-05-31T00:47:35.408Z" },
 ]
 
 [[package]]
